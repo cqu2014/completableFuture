@@ -21,7 +21,6 @@ public class AsyncTaskExecutor {
     private static Executor executor =  Executors.newFixedThreadPool(2);
 
     public static void main(String[] args) throws InterruptedException {
-        count.set(0L);
         CompletableFuture<Long> longCompletableFuture = CompletableFuture.supplyAsync(AsyncTaskExecutor::fetchPrice,executor);
             longCompletableFuture.thenAccept((result) -> count.set(count.get() + result))
                 .exceptionally(throwable -> {
@@ -36,14 +35,20 @@ public class AsyncTaskExecutor {
                     return null;
                 });
         CompletableFuture<Void> allOf = CompletableFuture.allOf(longCompletableFuture, longCompletableFuture2);
-        allOf.thenAccept(x -> log.info("result = {}",count.get())
-        );
+        allOf.thenAccept(x -> {
+            try {
+                log.info("result = {}",longCompletableFuture.get(1,TimeUnit.SECONDS)+longCompletableFuture2.get(1,TimeUnit.SECONDS));
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                e.printStackTrace();
+            }
+        });
         // 主线程不要立刻结束，否则CompletableFuture默认使用的线程池会立刻关闭:
-        Thread.sleep(200);
+        TimeUnit.SECONDS.sleep(5);
     }
 
     static Long fetchPrice(){
         try {
+            count.set(0L);
             TimeUnit.MILLISECONDS.sleep(100);
         } catch (InterruptedException ignored) {
         }
