@@ -47,7 +47,6 @@ public class AtomicLongExecutor {
 
     static Long fetchPrice(){
         try {
-            count.set(0L);
             TimeUnit.MILLISECONDS.sleep(100);
         } catch (InterruptedException ignored) {
         }
