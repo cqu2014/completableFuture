@@ -25,6 +25,7 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+	compile 'cn.hutool:hutool-all:5.3.10'
 }
 
 test {
