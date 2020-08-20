@@ -22,6 +22,9 @@ public class SerializeTransient implements Serializable {
      * transient 修饰的属性不会被序列化
      */
     private transient String idCard;
+    /**
+     * 普通属性被序列化
+     */
     private String name;
 
     SerializeTransient(String idCard,String name){
