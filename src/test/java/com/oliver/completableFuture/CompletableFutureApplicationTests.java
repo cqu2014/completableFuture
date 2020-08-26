@@ -18,13 +18,14 @@ class CompletableFutureApplicationTests {
 	@Test
 	public void thenApply() {
 		CompletableFuture<String> stringCompletableFuture = CompletableFuture.supplyAsync(() -> "hello");
-		// 但依赖
+		// 单依赖-thenApply  [get()抛检查异常，join非检查异常]
 		String join = stringCompletableFuture.thenApply(s -> s + " world").join();
 		System.out.println(join);
 	}
 
 	@Test
 	public void thenCombine(){
+		// 双依赖，两个阶段的结果作为BiFunction的入参 [thenCompose 第二个阶段本身作为Function进行计算]
 		String join = CompletableFuture.supplyAsync(() -> {
 			sleep(3);
 			return "hello";
@@ -37,6 +38,7 @@ class CompletableFutureApplicationTests {
 
 	@Test
 	public void applyToEither(){
+		// 两者之中任意一个(最快的一个) 最快执行完的结果作为Function的参数
 		String join = CompletableFuture.supplyAsync(() -> {
 			sleep(3);
 			return "Tom";
@@ -49,11 +51,13 @@ class CompletableFutureApplicationTests {
 
 	@Test
 	public void thenAccept(){
+		// 单依赖消费型接口 返回 CompletableFuture<Void> 结果是 Void
 		CompletableFuture.supplyAsync(()-> "hello").thenAccept(s -> System.out.println(s + " world"));
 	}
 
 	@Test
 	public void thenAcceptBoth(){
+		// 双依赖消费型接口 两者的结果作为BiFunction的参数
 		CompletableFuture<Object> objectCompletableFuture = CompletableFuture.supplyAsync(() -> {
 			sleep(2);
 			return "hello";
@@ -69,6 +73,7 @@ class CompletableFutureApplicationTests {
 
 	@Test
 	public void acceptEither(){
+		// 任意依赖 结果作为Function参数
 		CompletableFuture.supplyAsync(() -> {
 			sleep(2);
 			return "hello john";
@@ -82,6 +87,7 @@ class CompletableFutureApplicationTests {
 
 	@Test
 	public void thenRun(){
+		// 单依赖 非函数非消费型
 		CompletableFuture.supplyAsync(()->{
 			sleep(2);
 			return "hello";
@@ -90,7 +96,8 @@ class CompletableFutureApplicationTests {
 	}
 
 	@Test
-	public void thenAfterBoth(){
+	public void runAfterBoth(){
+		// 双依赖 非函数非消费型
 		CompletableFuture.supplyAsync(()->{
 			sleep(2);
 			return "s1";
@@ -103,6 +110,7 @@ class CompletableFutureApplicationTests {
 
 	@Test
 	public void runAfterEither(){
+		// 最快依赖 非函数非消费型
 		CompletableFuture.supplyAsync(()->{
 			sleep(2);
 			System.out.println("hello tom");
@@ -117,10 +125,11 @@ class CompletableFutureApplicationTests {
 
 
 	/**
-	 * CompletableFuture 本身作为Function的参数进行计算
+	 * CompletableFuture本身作为Function进行计算
 	 */
 	@Test
 	public void thenCompose(){
+		// completionStage本身作为Function进行计算
 		System.out.println(CompletableFuture.supplyAsync(() -> {
 			sleep(1);
 			return "hello ";
@@ -132,14 +141,20 @@ class CompletableFutureApplicationTests {
 
 	@Test
 	public void whenComplete(){
+		/**
+		 * 异常与否均能执行的消费型接口 入参是
+		 * 	BiConsumer<? super T, ? super Throwable> action
+		 *	需要单独判别 Throwable 参数
+		 */
+
 		String join = CompletableFuture.supplyAsync(() -> {
-			sleep(1);
+			sleep(2);
 			if (1 > 0) {
 				throw new RuntimeException("测试一下异常情况");
 			}
 			return "hello ";
 		}).applyToEither(CompletableFuture.supplyAsync(() -> {
-			sleep(3);
+			sleep(1);
 			//会执行
 			System.out.println("return world...");
 			return "world";
@@ -159,6 +174,7 @@ class CompletableFutureApplicationTests {
 
 	@Test
 	public void handle(){
+		// 异常与否均能执行的函数型接口 接收Throwable参数
 		System.out.println(CompletableFuture.supplyAsync(() -> {
 			sleep(3);
 			//出现异常
@@ -177,9 +193,10 @@ class CompletableFutureApplicationTests {
 
 	@Test
 	public void exceptionally() {
+		// 异常才会执行的入参为 Throwable的函数型接口
 		String result = CompletableFuture.supplyAsync(() -> {
 			sleep(1);
-			if (1 == 2) {
+			if (1 == 1) {
 				throw new RuntimeException("测试一下异常情况");
 			}
 			return "s1";
