@@ -1,13 +1,18 @@
 package com.oliver.completableFuture;
 
 
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.Console;
+import com.oliver.completableFuture.util.ListTools;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 class CompletableFutureApplicationTests {
@@ -205,6 +210,43 @@ class CompletableFutureApplicationTests {
 			return "hello world"; //补偿返回
 		}).join();
 		System.out.println(result); //打印hello world
+	}
+
+	@Test
+	public void withParam(){
+		List<Integer> integerList = new ArrayList<>();
+		AtomicInteger atomicInteger = new AtomicInteger(0);
+		IntStream.rangeClosed(0,10).forEach(integerList::add);
+		integerList.forEach(x-> CompletableFuture.supplyAsync(()->(int)Math.pow(x,3)).thenApply(s->{
+			atomicInteger.addAndGet(s);
+			return s;
+		})
+				.thenAccept(System.out::println));
+		sleep(20);
+		System.out.println("atomicInteger = " + atomicInteger.get());
+	}
+
+	@Test
+	public void synchronizedList(){
+		Executor executor = Executors.newFixedThreadPool(5);
+		List<Integer> integerList = new ArrayList<>();
+		IntStream.rangeClosed(1,100).forEach(integerList::add);
+		/*List<Object> synchronizedList = Collections.synchronizedList(new LinkedList<>());
+		Objects.requireNonNull(ListTools.pageByNum(integerList, 2)).forEach(x->{
+			CompletableFuture.supplyAsync(()-> synchronizedList.add(x.get(0)+x.get(1)),executor).
+					thenAccept(b -> Console.log(synchronizedList));
+		});*/
+		final CopyOnWriteArrayList<Integer> copyOnWriteArrayList = new CopyOnWriteArrayList<>();
+		Objects.requireNonNull(ListTools.pageByNum(integerList, 2)).forEach(x-> CompletableFuture.supplyAsync(()->
+				copyOnWriteArrayList.add(x.get(0)+x.get(1)),executor).
+				thenAccept(b -> {
+					Console.log(Thread.currentThread().getName());
+					Console.log(copyOnWriteArrayList);
+				}));
+		do {
+			System.out.print("");
+		}while (50 != copyOnWriteArrayList.size());
+		System.out.println(copyOnWriteArrayList.size());
 	}
 
 	/**

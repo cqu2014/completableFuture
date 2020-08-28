@@ -1,9 +1,8 @@
-package com.oliver.completableFuture.util;
+package com.oliver.completableFuture.executor;
 
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Oliver Wang
@@ -13,28 +12,30 @@ import java.util.concurrent.atomic.AtomicLong;
  * @since
  */
 @Slf4j
-public class AtomicLongExecutor {
+public class AsyncTaskExecutor {
     /**
      * 统计执行数量
      */
-    private static AtomicLong count = new AtomicLong(0);
+    private static ThreadLocal<Long> count = new ThreadLocal<>();
+
     private static Executor executor =  Executors.newFixedThreadPool(2);
 
     public static void main(String[] args) throws InterruptedException {
-        CompletableFuture<Long> longCompletableFuture = CompletableFuture.supplyAsync(AtomicLongExecutor::fetchPrice,executor);
-            longCompletableFuture.thenAccept((result) -> log.info("{}==>{}",Thread.currentThread().getName(),count.addAndGet(result)))
+        CompletableFuture<Long> longCompletableFuture = CompletableFuture.supplyAsync(AsyncTaskExecutor::fetchPrice,executor);
+            longCompletableFuture.thenAccept((result) -> count.set(count.get() + result))
                 .exceptionally(throwable -> {
             log.info("longCompletableFuture {}",throwable.getLocalizedMessage());
             return null;
         });
 
-        CompletableFuture<Long> longCompletableFuture2 = CompletableFuture.supplyAsync(AtomicLongExecutor::fetchPrice,executor);
-            longCompletableFuture2.thenAccept((result) -> log.info("{}==>{}",Thread.currentThread().getName(),count.addAndGet(result)))
+        CompletableFuture<Long> longCompletableFuture2 = CompletableFuture.supplyAsync(AsyncTaskExecutor::fetchPrice,executor);
+            longCompletableFuture2.thenAccept((result) -> count.set(count.get() + result))
                 .exceptionally(throwable -> {
                     log.info("longCompletableFuture2 {}",throwable.getLocalizedMessage());
                     return null;
                 });
-       CompletableFuture.allOf(longCompletableFuture, longCompletableFuture2).thenAccept(x -> {
+        CompletableFuture<Void> allOf = CompletableFuture.allOf(longCompletableFuture, longCompletableFuture2);
+        allOf.thenAccept(x -> {
             try {
                 log.info("result = {}",longCompletableFuture.get(1,TimeUnit.SECONDS)+longCompletableFuture2.get(1,TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
@@ -47,6 +48,7 @@ public class AtomicLongExecutor {
 
     static Long fetchPrice(){
         try {
+            count.set(0L);
             TimeUnit.MILLISECONDS.sleep(100);
         } catch (InterruptedException ignored) {
         }
