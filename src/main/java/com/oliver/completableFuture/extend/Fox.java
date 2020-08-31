@@ -21,8 +21,8 @@ public class Fox extends Animal {
     private String foxSkip;
 
     public static void main(String[] args) {
-        // extendsAttributes();
-        // operatorAttribute();
+        extendsAttributes();
+        operatorAttribute();
         callMethod();
     }
 
@@ -45,8 +45,11 @@ public class Fox extends Animal {
         Field[] declaredFields = aClass.getDeclaredFields();
         Console.log(declaredFields);
 
+        Console.log("fox's method and extends from Animal!");
         Method[] aClassMethods = aClass.getMethods();
-        Console.log(aClassMethods);
+        for (Method item: aClassMethods) {
+            Console.log(item);
+        }
     }
 
     /**
