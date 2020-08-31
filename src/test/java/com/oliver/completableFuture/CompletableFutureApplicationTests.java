@@ -1,17 +1,17 @@
 package com.oliver.completableFuture;
 
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Console;
 import com.oliver.completableFuture.util.ListTools;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -247,6 +247,19 @@ class CompletableFutureApplicationTests {
 			System.out.print("");
 		}while (50 != copyOnWriteArrayList.size());
 		System.out.println(copyOnWriteArrayList.size());
+	}
+
+	@Test
+	public void	calculator(){
+		int max = 1 << 30;
+		int n = 64 - 1;
+		n |= n >>> 1;
+		n |= n >>> 2;
+		n |= n >>> 4;
+		n |= n >>> 8;
+		n |= n >>> 16;
+		n =  (n < 0) ? 1 : (n >= max) ?max : n + 1;
+		System.out.println(n);
 	}
 
 	/**
