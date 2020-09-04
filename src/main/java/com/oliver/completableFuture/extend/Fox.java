@@ -19,11 +19,13 @@ import java.lang.reflect.Method;
 @EqualsAndHashCode(callSuper = false)
 public class Fox extends Animal {
     private String foxSkip;
+    private transient String alias;
 
     public static void main(String[] args) {
-        extendsAttributes();
+       /* extendsAttributes();
         operatorAttribute();
-        callMethod();
+        callMethod();*/
+        transientToString();
     }
 
     @Override
@@ -82,5 +84,18 @@ public class Fox extends Animal {
         Fox fox = new Fox();
         fox.run();
         fox.runAndVoice();
+    }
+
+    private static void transientToString(){
+        Fox fox = new Fox();
+        fox.setAlias("妖精");
+        fox.setName("狐狸");
+        System.out.println(fox);
+        Console.log(fox);
+    }
+
+    @Override
+    public String toString(){
+        return this.getAlias()+","+getName()+","+getAgent();
     }
 }
