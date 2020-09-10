@@ -29,15 +29,14 @@ public class WithThreadLocal {
     }
 
     public static void main(String[] args) {
-        WithThreadLocal withoutThreadLocal = new WithThreadLocal();
-        IntStream.range(0,5).forEach(x->{
-           Thread thread = new Thread(() -> {
-               withoutThreadLocal.setContent(Thread.currentThread().getName()+"数据");
-               System.out.println("---------------------------------------");
-               System.out.println(Thread.currentThread().getName() + "------>" + withoutThreadLocal.getContent());
-           });
-           thread.setName("线程"+x);
-           thread.start();
-        });
+        WithThreadLocal withThreadLocal = new WithThreadLocal();
+        for (int item = 0; item < 10; item++) {
+            Thread thread = new Thread(() -> {
+                withThreadLocal.setContent(Thread.currentThread().getName() + "数据");
+                System.out.println(Thread.currentThread().getName() + "------>" + withThreadLocal.getContent());
+            });
+            thread.setName("线程" + item);
+            thread.start();
+        }
     }
 }
