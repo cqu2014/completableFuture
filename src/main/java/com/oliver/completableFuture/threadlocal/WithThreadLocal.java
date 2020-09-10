@@ -13,17 +13,19 @@ import java.util.stream.IntStream;
  */
 @Slf4j
 public class WithThreadLocal {
-    private static ThreadLocal<String> stringThreadLocal = new ThreadLocal<>();
-    private String content;
+    /**
+     *
+     */
+    private static final ThreadLocal<String> threadLocalContent = new ThreadLocal<>();
 
     public String getContent(){
         // 获取当前线程的局部
-        return stringThreadLocal.get();
+        return threadLocalContent.get();
     }
 
     public void setContent(String content) {
         // 绑定当前线程的局部变量
-        stringThreadLocal.set(content);
+        threadLocalContent.set(content);
     }
 
     public static void main(String[] args) {
