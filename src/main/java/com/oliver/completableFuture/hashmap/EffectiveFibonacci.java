@@ -1,5 +1,7 @@
 package com.oliver.completableFuture.hashmap;
 
+import org.springframework.util.StopWatch;
+
 import java.math.BigInteger;
 import java.util.HashMap;
 
@@ -12,10 +14,32 @@ import java.util.HashMap;
  */
 public class EffectiveFibonacci {
 
+    private static final  HashMap<Integer,BigInteger> preValue = new HashMap<>();
+    static {
+        preValue.put(0,BigInteger.ZERO);
+        preValue.put(1,BigInteger.ONE);
+        preValue.put(2,BigInteger.ONE);
+    }
+
     public static void main(String[] args) {
-        System.out.println("fibonacci(10)="+fibonacci(2));
+        StopWatch stopWatch = new StopWatch("斐波那切数列执行时间统计");
+
+        stopWatch.start("fibonacci(2)");
+        System.out.println("fibonacci(2)="+fibonacci(2));
+        stopWatch.stop();
+        System.out.println(stopWatch.shortSummary());
+
+        stopWatch.start("fibonacci(5)");
         System.out.println("fibonacci(5)="+fibonacci(5));
-        System.out.println("fibonacci(20)="+fibonacci(50));
+        stopWatch.stop();
+        System.out.println(stopWatch.shortSummary());
+
+        stopWatch.start("fibonacci(20)");
+        System.out.println("fibonacci(20)="+fibonacci(20));
+        stopWatch.stop();
+        System.out.println(stopWatch.shortSummary());
+
+        System.out.println(stopWatch.prettyPrint());
     }
 
     /**
@@ -25,10 +49,6 @@ public class EffectiveFibonacci {
      * @return
      */
     private static BigInteger fibonacci(int n){
-        final HashMap<Integer,BigInteger> preValue = new HashMap<>(n);
-        preValue.put(0,BigInteger.ZERO);
-        preValue.put(1,BigInteger.ONE);
-        preValue.put(2,BigInteger.ONE);
         return preValue.computeIfAbsent(n,(key)-> fibonacci(key-1).add(fibonacci(n-2)));
     }
 }
