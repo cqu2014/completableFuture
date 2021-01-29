@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: completable future
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/snsdb?useUnicode=true&characterEncoding=UTF-8&useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: woaini
+    driver-class-name: com.mysql.jdbc.Driver
