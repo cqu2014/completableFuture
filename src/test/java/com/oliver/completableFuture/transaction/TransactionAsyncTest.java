@@ -14,6 +14,6 @@ public class TransactionAsyncTest {
 
     @Test
     public void transactionAsync() {
-        transactionAsync.transactionAsync();
+        System.out.println(transactionAsync.transactionAsync());
     }
 }
