@@ -2,7 +2,11 @@ spring:
   application:
     name: completable future
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/snsdb?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/future_school?useUnicode=true&characterEncoding=UTF-8&useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&serverTimezone=Asia/Shanghai
     username: ${local.mysql.username}
     password: ${local.mysql.pwd}
+
+mybatis:
+  mapper-locations: classpath*:com/oliver/completableFuture/mapper/*.xml
+  type-aliases-package: com.oliver.completableFuture.mapper
