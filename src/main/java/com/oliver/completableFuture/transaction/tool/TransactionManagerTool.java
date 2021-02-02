@@ -16,6 +16,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -139,8 +140,10 @@ public class TransactionManagerTool {
         rollBackLatch.await();
         if (rollbackFlag.get()) {
             // 异常回滚非本事务导致无需抛异常
+            log.info("*****************************************");
             transactionManager.rollback(transactionStatus);
         } else {
+            log.info("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
             transactionManager.commit(transactionStatus);
         }
     }
