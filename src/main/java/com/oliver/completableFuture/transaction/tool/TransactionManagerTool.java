@@ -9,6 +9,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
@@ -44,7 +45,7 @@ public class TransactionManagerTool {
      * @param managerDates
      * @param consumer
      */
-    public void manager(List<transactionManagerDate<?,?>> managerDates,Consumer<List<Future<?>>> consumer,long timeoutMill){
+    public void manager(List<transactionManagerDate<?,?>> managerDates,Consumer<List<Future<?>>> consumer){
         log.info("control start @ {}", LocalDateTime.now());
         long startTime = System.currentTimeMillis();
         // 同步计数器
@@ -58,7 +59,7 @@ public class TransactionManagerTool {
         if (!rollbackFlag.get()){
             try{
                 // 等到另外3个线程执行完毕
-                mainThreadLatch.await(timeoutMill, TimeUnit.MILLISECONDS);
+                mainThreadLatch.await();
                 rollBackLatch.countDown();
                 // 无返回值主逻辑
                 consumer.accept(futureList);

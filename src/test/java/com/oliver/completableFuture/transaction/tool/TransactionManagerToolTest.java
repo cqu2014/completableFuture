@@ -42,7 +42,7 @@ public class TransactionManagerToolTest {
     public void managerTest() {
         List<TransactionManagerTool.transactionManagerDate<?,?>> managerDates = new ArrayList<>();
         // 处理教师信息
-        FsTeacher teacherInfo = FsTeacher.teacher("王小二","18290406697", (byte) 2,"化学",1);
+        FsTeacher teacherInfo = FsTeacher.teacher("王大明","18290406698", (byte) 2,"化学",1);
         managerDates.add(new TransactionManagerTool.transactionManagerDate<>(
                 teacherDao,
                 dealWithTeacherExecutor,
@@ -63,7 +63,7 @@ public class TransactionManagerToolTest {
                     return teacher.getId();
                 }, teacherInfo));
         // 处理学生信息
-        FsStudent studentInfo = FsStudent.student("咕噜咕噜","1002515","18390406698",2,"五年级(10)班");
+        FsStudent studentInfo = FsStudent.student("嘀哩嘀哩","1002510","18390406699",2,"五年级(3)班");
         managerDates.add(new TransactionManagerTool.transactionManagerDate<>(
                 studentDao,
                 dealWithStudentExecutor,
@@ -85,7 +85,49 @@ public class TransactionManagerToolTest {
                     return null;
                 },studentInfo)
         );
-        manager.manager(managerDates,this::show,10*1000);
+        FsTeacher teacherInfo1 = FsTeacher.teacher("王二狗","18290406691", (byte) 2,"化学",1);
+        managerDates.add(new TransactionManagerTool.transactionManagerDate<>(
+                teacherDao,
+                dealWithTeacherExecutor,
+                teacher -> {
+                    log.info("TeacherHandler with {} start with {}", Thread.currentThread().getName(),
+                            JSONUtil.toJsonStr(teacher));
+                    teacherDao.insertSelective(teacher);
+                    FsTeacherExample teacherExample = new FsTeacherExample();
+                    teacherExample.createCriteria().andIs_delEqualTo((byte) 0);
+                    long number = teacherDao.countByExample(teacherExample);
+                    log.info("Now we have {} teachers",number);
+                    try {
+                        TimeUnit.SECONDS.sleep(3);
+                    } catch (InterruptedException interruptedException) {
+                        interruptedException.printStackTrace();
+                    }
+                    log.info("TeacherHandler complete. id = {}",teacher.getId());
+                    return teacher.getId();
+                }, teacherInfo1));
+        // 处理学生信息
+        FsStudent studentInfo1 = FsStudent.student("哔哩哔哩","1002510","18390406690",2,"五年级(3)班");
+        managerDates.add(new TransactionManagerTool.transactionManagerDate<>(
+                studentDao,
+                dealWithStudentExecutor,
+                student ->{
+                    log.info("dealWithStudentHandler with {} start with {}", Thread.currentThread().getName(),
+                            JSONUtil.toJsonStr(student));
+                    try {
+                        TimeUnit.SECONDS.sleep(2);
+                    } catch (InterruptedException interruptedException) {
+                        interruptedException.printStackTrace();
+                    }
+                    int number = studentDao.insertSelective(student);
+                    FsStudentExample studentExample = new FsStudentExample();
+                    studentExample.createCriteria().andIs_delEqualTo((byte) 0);
+                    List<FsStudent> fsStudents = studentDao.selectByExample(studentExample);
+                    log.info("We have students = {}",JSONUtil.toJsonStr(fsStudents));
+                    log.info("dealWithStudentHandler complete. influence no = {}",number);
+                    return null;
+                },studentInfo1)
+        );
+        manager.manager(managerDates,this::show);
     }
 
     private void show(List<Future<?>> futureList){
