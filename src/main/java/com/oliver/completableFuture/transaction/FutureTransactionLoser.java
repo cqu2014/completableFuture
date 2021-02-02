@@ -33,12 +33,12 @@ import java.util.function.Supplier;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class FutureTransaction {
+public class FutureTransactionLoser {
     private final FsTeacherDao teacherDao;
     private final FsStudentDao studentDao;
-    private final ThreadPoolTaskExecutor dealWithTeacher;
-    private final ThreadPoolTaskExecutor dealWithStudent;
-    private final ThreadPoolTaskExecutor dealWithFibonacci;
+    private final ThreadPoolTaskExecutor dealWithTeacherExecutor;
+    private final ThreadPoolTaskExecutor dealWithStudentExecutor;
+    private final ThreadPoolTaskExecutor dealWithFibonacciExecutor;
 
 
     /**
@@ -53,10 +53,10 @@ public class FutureTransaction {
         log.info("insertTransaction start @: {}", LocalDateTime.now());
         long startTime = System.currentTimeMillis();
         FsTeacher teacher = FsTeacher.teacher("王二小","18290406696", (byte) 1,"物理",1);
-        CompletableFuture<Integer> teacherCompletableFuture = CompletableFuture.supplyAsync(new TeacherHandler(teacher), dealWithTeacher);
+        CompletableFuture<Integer> teacherCompletableFuture = CompletableFuture.supplyAsync(new TeacherHandler(teacher), dealWithTeacherExecutor);
 
         FsStudent student = FsStudent.student("咕噜咕噜","1002514","114",2,"五年级(10)班");
-        CompletableFuture<Integer> studentCompletableFuture = CompletableFuture.supplyAsync(new StudentHandler(student), dealWithStudent);
+        CompletableFuture<Integer> studentCompletableFuture = CompletableFuture.supplyAsync(new StudentHandler(student), dealWithStudentExecutor);
 
         CompletableFuture<String> stringCompletableFuture = CompletableFuture.supplyAsync(() -> {
             try {
@@ -66,7 +66,7 @@ public class FutureTransaction {
                 e.printStackTrace();
             }
             return "SUCCESS";
-        }, dealWithFibonacci);
+        }, dealWithFibonacciExecutor);
 
         CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
             try {
@@ -75,7 +75,7 @@ public class FutureTransaction {
                 e.printStackTrace();
             }
             return "SUCCESS";
-        }, dealWithFibonacci);
+        }, dealWithFibonacciExecutor);
 
         log.info("{},{},{},{}",teacherCompletableFuture.get(),
                 studentCompletableFuture.get(),stringCompletableFuture.get(),completableFuture.get());

@@ -23,13 +23,13 @@ public class ThreadPoolConfig {
      *
      * @return
      */
-    @Bean("dealWithTeacher")
+    @Bean("dealWithTeacherExecutor")
     public ThreadPoolTaskExecutor dealWithTeacher(){
         ThreadPoolTaskExecutor executor = getExecutor();
         executor.setCorePoolSize(3);
         executor.setMaxPoolSize(10);
         executor.setQueueCapacity(20);
-        executor.setThreadNamePrefix("dealWithTeacher-");
+        executor.setThreadNamePrefix("teacher-");
         executor.initialize();
         return executor;
     }
@@ -39,13 +39,13 @@ public class ThreadPoolConfig {
      *
      * @return
      */
-    @Bean("dealWithStudent")
+    @Bean("dealWithStudentExecutor")
     public ThreadPoolTaskExecutor dealWithStudent(){
         ThreadPoolTaskExecutor executor = getExecutor();
         executor.setCorePoolSize(5);
         executor.setMaxPoolSize(10);
         executor.setQueueCapacity(50);
-        executor.setThreadNamePrefix("dealWithStudent-");
+        executor.setThreadNamePrefix("student-");
         executor.initialize();
         return executor;
     }
@@ -55,13 +55,13 @@ public class ThreadPoolConfig {
      *
      * @return
      */
-    @Bean("dealWithFibonacci")
+    @Bean("dealWithFibonacciExecutor")
     public ThreadPoolTaskExecutor dealWithFibonacci(){
         ThreadPoolTaskExecutor executor = getExecutor();
         executor.setCorePoolSize(2);
         executor.setMaxPoolSize(5);
         executor.setQueueCapacity(20);
-        executor.setThreadNamePrefix("dealWithFibonacci-");
+        executor.setThreadNamePrefix("fibonacci-");
         executor.initialize();
         return executor;
     }

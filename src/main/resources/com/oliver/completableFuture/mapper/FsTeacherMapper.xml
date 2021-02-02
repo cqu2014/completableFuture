@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oliver.completableFuture.mapper.FsTeacherDao">
+  <resultMap id="BaseResultMap" type="com.oliver.completableFuture.entity.FsTeacher">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="teacher_name" jdbcType="VARCHAR" property="teacher_name" />
+    <result column="phone_no" jdbcType="VARCHAR" property="phone_no" />
+    <result column="position" jdbcType="TINYINT" property="position" />
+    <result column="expertise" jdbcType="VARCHAR" property="expertise" />
+    <result column="entry_time" jdbcType="TIMESTAMP" property="entry_time" />
+    <result column="teaching_age" jdbcType="INTEGER" property="teaching_age" />
+    <result column="last_update_time" jdbcType="TIMESTAMP" property="last_update_time" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="add_time" />
+    <result column="is_del" jdbcType="TINYINT" property="is_del" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, teacher_name, phone_no, `position`, expertise, entry_time, teaching_age, last_update_time, 
+    add_time, is_del
+  </sql>
+  <select id="selectByExample" parameterType="com.oliver.completableFuture.entity.FsTeacherExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from fs_teacher
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+          limit #{offset}, #{limit}
+      </if>
+      <if test="offset == null">
+          limit #{limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fs_teacher
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from fs_teacher
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.oliver.completableFuture.entity.FsTeacherExample">
+    delete from fs_teacher
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.oliver.completableFuture.entity.FsTeacher">
+    insert into fs_teacher (id, teacher_name, phone_no, 
+      `position`, expertise, entry_time, 
+      teaching_age, last_update_time, add_time, 
+      is_del)
+    values (#{id,jdbcType=BIGINT}, #{teacher_name,jdbcType=VARCHAR}, #{phone_no,jdbcType=VARCHAR}, 
+      #{position,jdbcType=TINYINT}, #{expertise,jdbcType=VARCHAR}, #{entry_time,jdbcType=TIMESTAMP}, 
+      #{teaching_age,jdbcType=INTEGER}, #{last_update_time,jdbcType=TIMESTAMP}, #{add_time,jdbcType=TIMESTAMP}, 
+      #{is_del,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.oliver.completableFuture.entity.FsTeacher">
+    insert into fs_teacher
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="teacher_name != null">
+        teacher_name,
+      </if>
+      <if test="phone_no != null">
+        phone_no,
+      </if>
+      <if test="position != null">
+        `position`,
+      </if>
+      <if test="expertise != null">
+        expertise,
+      </if>
+      <if test="entry_time != null">
+        entry_time,
+      </if>
+      <if test="teaching_age != null">
+        teaching_age,
+      </if>
+      <if test="last_update_time != null">
+        last_update_time,
+      </if>
+      <if test="add_time != null">
+        add_time,
+      </if>
+      <if test="is_del != null">
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="teacher_name != null">
+        #{teacher_name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone_no != null">
+        #{phone_no,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        #{position,jdbcType=TINYINT},
+      </if>
+      <if test="expertise != null">
+        #{expertise,jdbcType=VARCHAR},
+      </if>
+      <if test="entry_time != null">
+        #{entry_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="teaching_age != null">
+        #{teaching_age,jdbcType=INTEGER},
+      </if>
+      <if test="last_update_time != null">
+        #{last_update_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="add_time != null">
+        #{add_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="is_del != null">
+        #{is_del,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.oliver.completableFuture.entity.FsTeacherExample" resultType="java.lang.Long">
+    select count(*) from fs_teacher
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update fs_teacher
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.teacher_name != null">
+        teacher_name = #{record.teacher_name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phone_no != null">
+        phone_no = #{record.phone_no,jdbcType=VARCHAR},
+      </if>
+      <if test="record.position != null">
+        `position` = #{record.position,jdbcType=TINYINT},
+      </if>
+      <if test="record.expertise != null">
+        expertise = #{record.expertise,jdbcType=VARCHAR},
+      </if>
+      <if test="record.entry_time != null">
+        entry_time = #{record.entry_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.teaching_age != null">
+        teaching_age = #{record.teaching_age,jdbcType=INTEGER},
+      </if>
+      <if test="record.last_update_time != null">
+        last_update_time = #{record.last_update_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.add_time != null">
+        add_time = #{record.add_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.is_del != null">
+        is_del = #{record.is_del,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update fs_teacher
+    set id = #{record.id,jdbcType=BIGINT},
+      teacher_name = #{record.teacher_name,jdbcType=VARCHAR},
+      phone_no = #{record.phone_no,jdbcType=VARCHAR},
+      `position` = #{record.position,jdbcType=TINYINT},
+      expertise = #{record.expertise,jdbcType=VARCHAR},
+      entry_time = #{record.entry_time,jdbcType=TIMESTAMP},
+      teaching_age = #{record.teaching_age,jdbcType=INTEGER},
+      last_update_time = #{record.last_update_time,jdbcType=TIMESTAMP},
+      add_time = #{record.add_time,jdbcType=TIMESTAMP},
+      is_del = #{record.is_del,jdbcType=TINYINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.oliver.completableFuture.entity.FsTeacher">
+    update fs_teacher
+    <set>
+      <if test="teacher_name != null">
+        teacher_name = #{teacher_name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone_no != null">
+        phone_no = #{phone_no,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        `position` = #{position,jdbcType=TINYINT},
+      </if>
+      <if test="expertise != null">
+        expertise = #{expertise,jdbcType=VARCHAR},
+      </if>
+      <if test="entry_time != null">
+        entry_time = #{entry_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="teaching_age != null">
+        teaching_age = #{teaching_age,jdbcType=INTEGER},
+      </if>
+      <if test="last_update_time != null">
+        last_update_time = #{last_update_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="add_time != null">
+        add_time = #{add_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="is_del != null">
+        is_del = #{is_del,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.oliver.completableFuture.entity.FsTeacher">
+    update fs_teacher
+    set teacher_name = #{teacher_name,jdbcType=VARCHAR},
+      phone_no = #{phone_no,jdbcType=VARCHAR},
+      `position` = #{position,jdbcType=TINYINT},
+      expertise = #{expertise,jdbcType=VARCHAR},
+      entry_time = #{entry_time,jdbcType=TIMESTAMP},
+      teaching_age = #{teaching_age,jdbcType=INTEGER},
+      last_update_time = #{last_update_time,jdbcType=TIMESTAMP},
+      add_time = #{add_time,jdbcType=TIMESTAMP},
+      is_del = #{is_del,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
