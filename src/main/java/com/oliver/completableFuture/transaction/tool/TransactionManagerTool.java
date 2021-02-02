@@ -98,7 +98,7 @@ public class TransactionManagerTool {
             TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
             try{
                 R result = dateInfo.getFunction().apply(dateInfo.getData());
-                // 业务处理结束 开始处理事务
+                // 业务处理结束-结束-结束 开始处理事务
                 transactionManager(rollBackLatch,mainThreadLatch,rollbackFlag,transactionStatus);
                 return result;
             } catch (Exception exception){

@@ -106,7 +106,7 @@ public class TransactionManagerToolTest {
                     return teacher.getId();
                 }, teacherInfo1));
         // 处理学生信息
-        FsStudent studentInfo1 = FsStudent.student("哔哩哔哩","1002510","18390406690",2,"五年级(3)班");
+        FsStudent studentInfo1 = FsStudent.student("哔哩哔哩","1002511","18390406690",2,"五年级(3)班");
         managerDates.add(new TransactionManagerTool.transactionManagerDate<>(
                 studentDao,
                 dealWithStudentExecutor,
