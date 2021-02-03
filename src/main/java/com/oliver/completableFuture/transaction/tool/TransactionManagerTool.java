@@ -100,6 +100,7 @@ public class TransactionManagerTool {
             try{
                 R result = dateInfo.getFunction().apply(dateInfo.getData());
                 // 业务处理结束-结束-结束 开始处理事务
+                // TODO commit之后其他线程异常则无法自动回滚
                 transactionManager(rollBackLatch,mainThreadLatch,rollbackFlag,transactionStatus);
                 return result;
             } catch (Exception exception){
