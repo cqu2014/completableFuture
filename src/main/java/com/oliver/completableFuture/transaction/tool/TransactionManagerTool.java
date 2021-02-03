@@ -50,18 +50,19 @@ public class TransactionManagerTool {
         log.info("control start @ {}", LocalDateTime.now());
         long startTime = System.currentTimeMillis();
         // 同步计数器
-        CountDownLatch rollBackLatch = new CountDownLatch(1);
+        CountDownLatch transactionLatch = new CountDownLatch(1);
+        // 主线程同步计数器
         CountDownLatch mainThreadLatch = new CountDownLatch(managerDates.size());
         AtomicBoolean rollbackFlag = new AtomicBoolean(false);
         List<Future<?>> futureList = new ArrayList<>(managerDates.size());
         // ####################### 业务处理 ######################
-        managerDates.forEach(x -> futureList.add(dealWithHandler(rollBackLatch,mainThreadLatch,rollbackFlag,x)));
+        managerDates.forEach(x -> futureList.add(dealWithHandler(transactionLatch,mainThreadLatch,rollbackFlag,x)));
         // 等待各个线程执行完毕 释放事务处理计数器
         if (!rollbackFlag.get()){
             try{
                 // 等到另外3个线程执行完毕
                 mainThreadLatch.await();
-                rollBackLatch.countDown();
+                transactionLatch.countDown();
                 // 无返回值主逻辑
                 consumer.accept(futureList);
             }catch (Exception exception){
